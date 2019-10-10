@@ -6,7 +6,7 @@
 struct Student
 {
     /* data */
-    char studentId[100],studentName[100], studentDivision,contact[12], searchKey,searchName[300], searchQuerry;
+    char studentId[100],studentName[100], studentDivision,contact[12];
     int studentClass, fileleng ,i ,n;
     float lastClassMark;
 };
@@ -16,13 +16,16 @@ void main()
 {
     struct Student student;
     int ch;
+    char  replay ,searchQuerry;
     FILE *file;
 
     system("clear");
+    
     printf("\n1.Add student Details");
     printf("\n2.Search By Student Name");
     printf("\n3.Student Details List");
     printf("\n4.Modify the Student Details");
+    printf("\n5.Exit");
     printf("\nplease select the option Number:");
     scanf("%d",&ch);
     switch (ch)
@@ -34,8 +37,10 @@ void main()
                     fprintf(stderr, "\nError opend file\n"); 
                     exit (1); 
                 } 
-
-            printf("\nEnter the student id:");
+            do
+            {
+                /* code */
+                printf("\nEnter the student id:");
             scanf("%s",&student.studentId);
 
             printf("\nEnter the student Name:");
@@ -66,26 +71,34 @@ void main()
             printf("\nstudent parent contact:%s",student.contact);
 
             // write the files content to student structure data
+            //gcc student.c -o student -lncurses
             fwrite (&student, sizeof(struct Student), 1, file);
-            if(fwrite != 0)  
+            if(fwrite != 0)  {
+                 printf("contents to file written successfully !\n"); 
+                 printf("\nDo you want add more student details Y/N:");
+                 scanf("%s", &replay );
+            }
                 //if the condition satisfy the message will be print
 
-                 printf("contents to file written successfully !\n"); 
-            else 
+                
+            else {
                 printf("error writing file !\n"); 
-  
+            }
+
+            } while (replay == 'Y');
             // close file 
             fclose (file);
-                break;
+            return(0);
+            break;
+            
+            
         case 2:
                 file= fopen("student.dat","w+");
                 if(file == NULL)
                 {
-                    fprintf(stderr,"\nOops file open error please check the database exist otherwise please create one\n");
+                    fprintf(stderr,"\nOops file open error \n");
                     exit(1);
                 }
-                i=sizeof(struct Student);
-                printf("\nLength of dataBase:%d",&i);
                 
                 break;
                 
