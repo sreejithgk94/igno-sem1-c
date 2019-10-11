@@ -3,23 +3,22 @@
 #include <string.h> 
 #include <curses.h>
 
-struct Student
+typedef struct 
 {
     /* data */
     char studentId[100],studentName[100], studentDivision,contact[12];
-    int studentClass, fileleng ,i ,n;
+    int studentClass, fileleng;
     float lastClassMark;
-};
-
-
+}Student;
 void main()
 {
-    struct Student student;
-    int ch;
-    char  replay ,searchQuerry;
+    Student student;
+    int ch ,fileCount=0,status=0;
+    int sizeOfStudent=sizeof(student);
+    char  replay ,searchQuerry[100];
     FILE *file;
 
-    system("clear");
+    system("cls");
     
     printf("\n1.Add student Details");
     printf("\n2.Search By Student Name");
@@ -40,7 +39,7 @@ void main()
             do
             {
                 /* code */
-                printf("\nEnter the student id:");
+            printf("\nEnter the student id:");
             scanf("%s",&student.studentId);
 
             printf("\nEnter the student Name:");
@@ -72,7 +71,7 @@ void main()
 
             // write the files content to student structure data
             //gcc student.c -o student -lncurses
-            fwrite (&student, sizeof(struct Student), 1, file);
+            fwrite (&student, sizeof(Student), 1, file);
             if(fwrite != 0)  {
                  printf("contents to file written successfully !\n"); 
                  printf("\nDo you want add more student details Y/N:");
@@ -88,18 +87,39 @@ void main()
             } while (replay == 'Y');
             // close file 
             fclose (file);
-            return(0);
             break;
             
             
         case 2:
-                file= fopen("student.dat","w+");
+                file= fopen("student.dat","r");
                 if(file == NULL)
                 {
                     fprintf(stderr,"\nOops file open error \n");
                     exit(1);
                 }
-                
+                printf("\nEnter the student:");
+                scanf("%s",&searchQuerry);
+                fseek(file,0,SEEK_SET);
+                 printf("\nSearch Result");
+                printf("\n----------------\n");
+                while (fread(&student,sizeOfStudent,1,file) == 1)
+                {
+                   fileCount++;
+                   if(student.studentName == searchQuerry){
+                       status = 1;
+                       break;
+                   }
+                }
+                if(status){
+                    printf ("\nId=%s Name=%s Class=%d Division=%c TotalMark=%f contact=%s\n", 
+                    student.studentId,student.studentName, student.studentClass, 
+                    student.studentDivision,student.lastClassMark,student.contact);
+                }
+                else
+                {
+                    printf("\nNo data found\n");
+                }
+                fclose(file);
                 break;
                 
         case 3:
@@ -111,9 +131,10 @@ void main()
                 } 
                 
                 // read file contents till end of file 
+                //https://www.dreamincode.net/forums/topic/99843-searching-for-data-in-a-file-using-c/
                 printf("\nStudents List Details");
                 printf("\n---------------------");
-                while(fread(&student, sizeof(struct Student), 1, file)) 
+                while(fread(&student, sizeof(Student), 1, file)) 
                     printf ("\nId=%s Name=%s Class=%d Division=%c TotalMark=%f contact=%s\n", 
                     student.studentId,student.studentName, student.studentClass, 
                     student.studentDivision,student.lastClassMark,student.contact); 
@@ -121,10 +142,16 @@ void main()
                 // close file 
                 fclose (file); 
                 break; 
+
+        case 4:exit(0);
+
+        case 5 :exit(0);       
     
-    default:printf("\n please check the input");
+    default:printf("\n please check the input\n");
         break;
     }
     getch();
+
 }
+
 
