@@ -14,11 +14,11 @@ void main()
 {
     Student student;
     int ch ,fileCount=0,status=0;
-    int sizeOfStudent=sizeof(student);
+    int sizeOfStudent=sizeof(student),studentId;
     char  replay ,searchQuerry[100];
     FILE *file;
 
-    system("cls");
+    system("clear");
     
     printf("\n1.Add student Details");
     printf("\n2.Search By Student Name");
@@ -105,7 +105,7 @@ void main()
                 while (fread(&student,sizeOfStudent,1,file) == 1)
                 {
                    fileCount++;
-                   if(student.studentName == searchQuerry){
+                   if(strcmp(student.studentName , searchQuerry) == 0){
                        status = 1;
                        break;
                    }
@@ -130,8 +130,6 @@ void main()
                     exit (1); 
                 } 
                 
-                // read file contents till end of file 
-                //https://www.dreamincode.net/forums/topic/99843-searching-for-data-in-a-file-using-c/
                 printf("\nStudents List Details");
                 printf("\n---------------------");
                 while(fread(&student, sizeof(Student), 1, file)) 
@@ -143,8 +141,62 @@ void main()
                 fclose (file); 
                 break; 
 
-        case 4:exit(0);
+        case 4:
+                 file= fopen("student.dat","w");
+                if(file == NULL)
+                {
+                    fprintf(stderr,"\nOops file open error \n");
+                    exit(1);
+                }
+                printf("\nEnter the student:");
+                scanf("%s",&searchQuerry);
+                fseek(file,0,SEEK_SET);
+                 printf("\nUpdate details");
+                printf("\n----------------\n");
+                while (fread(&student,sizeOfStudent,1,file) == 1)
+                {
+                   fileCount++;
+                   if(strcmp(student.studentName , searchQuerry) == 0){
+                       status = 1;
+                       break;
+                   }
+                }
+                if(status){
+                    printf("\nEnter the student Name:");
+                    scanf("%s",&student.studentName);
 
+                    printf("\nEnter the student class (in integer):");
+                    scanf("%d",&student.studentClass);
+
+                    printf("\nEnter the student division:");
+                    scanf("%s",&student.studentDivision);
+
+                    printf("\nEnter the student last class total mark:");
+                    scanf("%f",&student.lastClassMark);
+
+                    printf("\nEnter the parents Contact number:");
+                    scanf("%s",&student.contact);
+                }
+                else
+                {
+                    printf("\nNo data found\n");
+                }
+                    fwrite (&student, sizeof(Student), 1, file);
+                    if(fwrite != 0)  {
+                        printf("contents to file written successfully !\n"); 
+                        printf("\nDo you want update more student details Y/N:");
+                        scanf("%s", &replay );
+                    }
+                //if the condition satisfy the message will be print
+
+                
+            else {
+                printf("error writing file !\n"); 
+            }
+                fclose(file);
+                break;
+                
+               
         case 5 :exit(0);       
     
     default:printf("\n please check the input\n");
