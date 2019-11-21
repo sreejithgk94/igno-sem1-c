@@ -136,67 +136,42 @@ void main()
                     printf ("\nId=%s Name=%s Class=%d Division=%c TotalMark=%f contact=%s\n", 
                     student.studentId,student.studentName, student.studentClass, 
                     student.studentDivision,student.lastClassMark,student.contact); 
-            
                 // close file 
                 fclose (file); 
                 break; 
 
         case 4:
-                 file= fopen("student.dat","w");
-                if(file == NULL)
-                {
-                    fprintf(stderr,"\nOops file open error \n");
+                file = fopen("student.dat","r+");
+                if(file == NULL){
+                    fprintf(stderr,"File not exist\n");
                     exit(1);
                 }
-                printf("\nEnter the student:");
+
+                printf("\nEnter the student name:");
                 scanf("%s",&searchQuerry);
-                fseek(file,0,SEEK_SET);
-                 printf("\nUpdate details");
-                printf("\n----------------\n");
                 while (fread(&student,sizeOfStudent,1,file) == 1)
                 {
                    fileCount++;
-                   if(strcmp(student.studentName , searchQuerry) == 0){
+                   if(strcmp(student.studentName, searchQuerry) == 0){
                        status = 1;
                        break;
                    }
                 }
                 if(status){
-                    printf("\nEnter the student Name:");
-                    scanf("%s",&student.studentName);
-
-                    printf("\nEnter the student class (in integer):");
-                    scanf("%d",&student.studentClass);
-
-                    printf("\nEnter the student division:");
-                    scanf("%s",&student.studentDivision);
-
-                    printf("\nEnter the student last class total mark:");
-                    scanf("%f",&student.lastClassMark);
-
-                    printf("\nEnter the parents Contact number:");
-                    scanf("%s",&student.contact);
+                    printf("\nEnter the name of student:");
+                    scanf("%s",student.studentName);
+                    fwrite(&student, sizeof(Student), 1, file);
+                }
+                if (fwrite != 0)
+                {
+                   printf("File Updated Sucessfully");
                 }
                 else
                 {
-                    printf("\nNo data found\n");
+                    printf("\nFile update error check the details");
+                    exit(1);
                 }
-                    fwrite (&student, sizeof(Student), 1, file);
-                    if(fwrite != 0)  {
-                        printf("contents to file written successfully !\n"); 
-                        printf("\nDo you want update more student details Y/N:");
-                        scanf("%s", &replay );
-                    }
-                //if the condition satisfy the message will be print
 
-                
-            else {
-                printf("error writing file !\n"); 
-            }
-                fclose(file);
-                break;
-                
-               
         case 5 :exit(0);       
     
     default:printf("\n please check the input\n");
